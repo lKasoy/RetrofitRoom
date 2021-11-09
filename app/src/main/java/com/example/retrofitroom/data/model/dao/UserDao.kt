@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.retrofitroom.data.model.entity.Users
 import com.example.retrofitroom.data.model.entity.UsersTable
 
 @Dao
@@ -17,5 +16,10 @@ interface UserDao {
     fun add(result: List<UsersTable>)
 
     @Query("DELETE FROM table_users")
-    suspend fun deleteAll()
+    fun deleteAll()
+
+    @Query("SELECT * FROM table_users WHERE uuid = :uuid")
+    fun getById(uuid: String): UsersTable
+
+
 }

@@ -1,18 +1,18 @@
 package com.example.retrofitroom.data.model.entity
 
-data class Users (
+data class Users(
     val results: List<Result>,
     val info: Info
 )
 
-data class Info (
+data class Info(
     val seed: String,
     val results: Long,
     val page: Long,
     val version: String
 )
 
-data class Result (
+data class Result(
     val gender: String,
     val name: Name,
     val location: Location,
@@ -27,17 +27,17 @@ data class Result (
     val nat: String
 )
 
-data class Dob (
+data class Dob(
     val date: String,
     val age: Long
 )
 
-data class ID (
+data class ID(
     val name: String,
     val value: String
 )
 
-data class Location (
+data class Location(
     val street: Street,
     val city: String,
     val state: String,
@@ -47,22 +47,22 @@ data class Location (
     val timezone: Timezone
 )
 
-data class Coordinates (
+data class Coordinates(
     val latitude: String,
     val longitude: String
 )
 
-data class Street (
+data class Street(
     val number: Long,
     val name: String
 )
 
-data class Timezone (
+data class Timezone(
     val offset: String,
     val description: String
 )
 
-data class Login (
+data class Login(
     val uuid: String,
     val username: String,
     val password: String,
@@ -72,13 +72,13 @@ data class Login (
     val sha256: String
 )
 
-data class Name (
+data class Name(
     val title: String,
     val first: String,
     val last: String
 )
 
-data class Picture (
+data class Picture(
     val large: String,
     val medium: String,
     val thumbnail: String

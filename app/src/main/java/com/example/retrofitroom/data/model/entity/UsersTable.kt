@@ -11,7 +11,8 @@ data class UsersTable(
     var last: String,
     var large: String,
     @PrimaryKey var uuid: String,
-    var phone: String) {
+    var phone: String
+) {
 
     companion object {
         fun getUsersApiToTable(usersApi: Users?): List<UsersTable> {

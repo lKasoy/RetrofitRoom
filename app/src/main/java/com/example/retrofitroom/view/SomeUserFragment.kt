@@ -8,22 +8,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet.GONE
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.retrofitroom.R
-import com.example.retrofitroom.constants.Constants.GENDER
-import com.example.retrofitroom.constants.Constants.NAME_FIRST
-import com.example.retrofitroom.constants.Constants.NAME_LAST
-import com.example.retrofitroom.constants.Constants.NAME_TITLE
-import com.example.retrofitroom.constants.Constants.PICTURE_LARGE
+import com.example.retrofitroom.constants.Constants.UUID
+import com.example.retrofitroom.data.model.AppDatabase
+import com.example.retrofitroom.data.model.entity.UsersTable
+import com.example.retrofitroom.data.model.network.ApiService
+import com.example.retrofitroom.data.model.repository.UserRepository
 import com.example.retrofitroom.databinding.FragmentSomeUserBinding
+import com.example.retrofitroom.di.DI
+import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModel
+import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModelFactory
 
 class SomeUserFragment : Fragment() {
 
     private lateinit var binding: FragmentSomeUserBinding
+    private lateinit var someUserViewModel: SomeUserViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,21 +44,30 @@ class SomeUserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.apply {
-            context?.let {
-                showAvatar(requireArguments().getString(PICTURE_LARGE))
+
+        val factory = SomeUserViewModelFactory(DI.repository)
+
+        someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
+
+        val uuid = requireArguments().getString(UUID)
+        someUserViewModel.selectedUser.observe(viewLifecycleOwner, Observer {
+            it.let { user: UsersTable ->
+                binding.apply {
+                    showAvatar(user.large)
+                    gender.text = user.gender
+                    nameTitle.text = user.title
+                    nameFirst.text = user.first
+                    nameLast.text = user.last
+                }
             }
-            gender.text = requireArguments().getString(GENDER)
-            nameTitle.text = requireArguments().getString(NAME_TITLE)
-            nameFirst.text = requireArguments().getString(NAME_FIRST)
-            nameLast.text = requireArguments().getString(NAME_LAST)
-        }
+        })
+        uuid?.let { someUserViewModel.getSelectedUser(it) }
     }
 
     private fun showAvatar(url: String?) {
         Glide.with(this)
             .load(url)
-            .listener(object: RequestListener<Drawable>{
+            .listener(object : RequestListener<Drawable> {
                 @SuppressLint("WrongConstant")
                 override fun onLoadFailed(
                     e: GlideException?,

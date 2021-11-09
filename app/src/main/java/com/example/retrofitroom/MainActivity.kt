@@ -14,7 +14,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initFragment(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 replace<UsersFragment>(R.id.container)
                 setReorderingAllowed(true)
