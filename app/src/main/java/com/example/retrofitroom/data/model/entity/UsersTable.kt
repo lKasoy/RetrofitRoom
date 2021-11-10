@@ -15,7 +15,7 @@ data class UsersTable(
 ) {
 
     companion object {
-        fun getUsersApiToTable(usersApi: Users?): List<UsersTable> {
+        fun toDatabase(usersApi: Users?): List<UsersTable> {
             val users = usersApi?.results?.map {
                 UsersTable(
                     gender = it.gender,

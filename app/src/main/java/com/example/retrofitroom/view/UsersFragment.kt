@@ -1,6 +1,7 @@
 package com.example.retrofitroom.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +13,7 @@ import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
-import com.example.retrofitroom.data.model.AppDatabase
 import com.example.retrofitroom.data.model.entity.UsersTable
-import com.example.retrofitroom.data.model.network.ApiService
-import com.example.retrofitroom.data.model.repository.UserRepository
 import com.example.retrofitroom.databinding.FragmentItemListBinding
 import com.example.retrofitroom.di.DI
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModel
@@ -26,16 +24,21 @@ import com.example.retrofitroom.services.UsersAdapter
 class UsersFragment : Fragment() {
 
     private lateinit var binding: FragmentItemListBinding
-    private var usersAdapter = UsersAdapter { user: UsersTable ->
-        val userBundle = bundleOf(
-            UUID to user.uuid
-        )
-        parentFragmentManager.commit {
-            setReorderingAllowed(true)
-            replace<SomeUserFragment>(R.id.container, args = userBundle)
-            addToBackStack(null)
+    private var usersAdapter = UsersAdapter(
+        onCLick = { user: UsersTable ->
+            val userBundle = bundleOf(
+                UUID to user.uuid)
+            Log.d("MyApp", user.large)
+
+            parentFragmentManager.commit {
+                setReorderingAllowed(true)
+                replace<SomeUserFragment>(R.id.container, args = userBundle)
+                addToBackStack(null)
+            }
+        }, onEndReached = {
+            fragmentListViewModel.getUsers()
         }
-    }
+    )
     private lateinit var fragmentListViewModel: UsersViewModel
 
     override fun onCreateView(

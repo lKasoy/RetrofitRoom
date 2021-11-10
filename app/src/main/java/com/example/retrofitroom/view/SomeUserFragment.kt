@@ -3,14 +3,13 @@ package com.example.retrofitroom.view
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet.GONE
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -19,10 +18,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
-import com.example.retrofitroom.data.model.AppDatabase
 import com.example.retrofitroom.data.model.entity.UsersTable
-import com.example.retrofitroom.data.model.network.ApiService
-import com.example.retrofitroom.data.model.repository.UserRepository
 import com.example.retrofitroom.databinding.FragmentSomeUserBinding
 import com.example.retrofitroom.di.DI
 import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModel
@@ -46,12 +42,11 @@ class SomeUserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val factory = SomeUserViewModelFactory(DI.repository)
-
         someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
-
         val uuid = requireArguments().getString(UUID)
+
         someUserViewModel.selectedUser.observe(viewLifecycleOwner, Observer {
-            it.let { user: UsersTable ->
+            it?.let { user: UsersTable ->
                 binding.apply {
                     showAvatar(user.large)
                     gender.text = user.gender
@@ -61,10 +56,10 @@ class SomeUserFragment : Fragment() {
                 }
             }
         })
-        uuid?.let { someUserViewModel.getSelectedUser(it) }
+        someUserViewModel.getSelectedUser(uuid!!)
     }
 
-    private fun showAvatar(url: String?) {
+    private fun showAvatar(url: String) {
         Glide.with(this)
             .load(url)
             .listener(object : RequestListener<Drawable> {

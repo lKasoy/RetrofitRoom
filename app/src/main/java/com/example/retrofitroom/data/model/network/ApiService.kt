@@ -8,5 +8,5 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("?")
-    suspend fun getUsersAsync(@Query("results") quantity: Int): Response<Users>
+    suspend fun getUsersAsync(@Query("results") quantity: Int) : Users
 }
