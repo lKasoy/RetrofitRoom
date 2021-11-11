@@ -1,13 +1,10 @@
 package com.example.retrofitroom.view
 
-import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintSet.GONE
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -63,18 +60,15 @@ class SomeUserFragment : Fragment() {
         Glide.with(this)
             .load(url)
             .listener(object : RequestListener<Drawable> {
-                @SuppressLint("WrongConstant")
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
                     target: Target<Drawable>?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    binding.progress.visibility = GONE
+                    binding.progress.visibility = View.GONE
                     return false
                 }
-
-                @SuppressLint("WrongConstant")
                 override fun onResourceReady(
                     resource: Drawable?,
                     model: Any?,
@@ -82,7 +76,7 @@ class SomeUserFragment : Fragment() {
                     dataSource: DataSource?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    binding.progress.visibility = GONE
+                    binding.progress.visibility = View.GONE
                     return false
                 }
             })

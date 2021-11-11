@@ -16,26 +16,32 @@ class UsersViewModel(private val repository: UserRepository) : ViewModel() {
 
     private val _simpleLiveData = MutableLiveData<Event<List<UsersTable>>>()
     val simpleLiveData: LiveData<Event<List<UsersTable>>> = _simpleLiveData
+    var isFirstResponse: Boolean = true
+
+    init {
+        getUsers()
+    }
 
     fun getUsers() {
-
-        val currentValue = _simpleLiveData.value
-        val currentList = if (currentValue?.status == Status.SUCCESS) {
-            currentValue.data ?: listOf()
-        } else {
-            listOf()
-        }
-
         _simpleLiveData.postValue(Event.loading())
         this.viewModelScope.launch(Dispatchers.IO) {
             try {
+                val currentValue = _simpleLiveData.value
+                val currentList =
+                    if (currentValue?.status == Status.SUCCESS) {
+                        currentValue.data ?: listOf()
+                    } else listOf()
                 val userList = repository.getUsersFromApi()
-                val usersTable = currentList + toDatabase(userList)
-                _simpleLiveData.postValue(Event.success(usersTable))
-                repository.add(usersTable)
+                val userTable = toDatabase(userList)
+                if (isFirstResponse) {
+                    repository.deleteAll()
+                    isFirstResponse = false
+                }
+                repository.add(userTable)
+                _simpleLiveData.postValue(Event.success(currentList + userTable))
             } catch (e: Exception) {
                 e.printStackTrace()
-                _simpleLiveData.postValue(Event.loadFromDb(repository.getUsersFromDatabase()))
+                _simpleLiveData.postValue(Event.error(repository.getUsersFromDatabase()))
             }
         }
     }

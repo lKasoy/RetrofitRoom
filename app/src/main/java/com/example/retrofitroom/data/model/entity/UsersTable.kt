@@ -15,8 +15,8 @@ data class UsersTable(
 ) {
 
     companion object {
-        fun toDatabase(usersApi: Users?): List<UsersTable> {
-            val users = usersApi?.results?.map {
+        fun toDatabase(usersApi: Users): List<UsersTable> {
+             return usersApi.results.map {
                 UsersTable(
                     gender = it.gender,
                     title = it.name.title,
@@ -26,8 +26,7 @@ data class UsersTable(
                     uuid = it.login.uuid,
                     phone = it.phone
                 )
-            } ?: listOf()
-            return users
+            }
         }
     }
 }

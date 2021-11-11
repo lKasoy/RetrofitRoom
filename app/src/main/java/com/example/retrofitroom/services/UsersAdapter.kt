@@ -30,11 +30,11 @@ class UsersAdapter(
     }
     companion object DiffCallback : DiffUtil.ItemCallback<UsersTable>() {
         override fun areItemsTheSame(oldItem: UsersTable, newItem: UsersTable): Boolean {
-            return oldItem === newItem
+            return oldItem.uuid == newItem.uuid
         }
 
         override fun areContentsTheSame(oldItem: UsersTable, newItem: UsersTable): Boolean {
-            return  oldItem == newItem
+            return  oldItem.uuid == newItem.uuid
         }
     }
     class ViewHolder(private val binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root) {

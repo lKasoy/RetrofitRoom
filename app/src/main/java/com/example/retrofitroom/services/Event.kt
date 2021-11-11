@@ -11,8 +11,8 @@ data class Event<out T>(val status: Status, val data: T?) {
             return Event(Status.SUCCESS, data)
         }
 
-        fun <T> loadFromDb(data: T?): Event<T> {
-            return Event(Status.DAO, data)
+        fun <T> error(data : T?): Event<T> {
+            return Event(Status.ERROR, data)
         }
     }
 }

@@ -27,7 +27,8 @@ class UsersFragment : Fragment() {
     private var usersAdapter = UsersAdapter(
         onCLick = { user: UsersTable ->
             val userBundle = bundleOf(
-                UUID to user.uuid)
+                UUID to user.uuid
+            )
             Log.d("MyApp", user.large)
 
             parentFragmentManager.commit {
@@ -39,6 +40,7 @@ class UsersFragment : Fragment() {
             fragmentListViewModel.getUsers()
         }
     )
+
     private lateinit var fragmentListViewModel: UsersViewModel
 
     override fun onCreateView(
@@ -58,26 +60,17 @@ class UsersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.list.adapter = usersAdapter
-
         val factory = UsersViewModelFactory(DI.repository)
-
         fragmentListViewModel = ViewModelProvider(this, factory).get(UsersViewModel::class.java)
         observeGetPosts()
-        fragmentListViewModel.getUsers()
     }
 
     private fun observeGetPosts() {
         fragmentListViewModel.simpleLiveData.observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.LOADING -> viewOneLoading()
-                Status.SUCCESS -> {
-                    viewOneSuccess(it.data)
-                    Toast.makeText(context, "LOAD FROM API", Toast.LENGTH_SHORT).show()
-                }
-                Status.DAO -> {
-                    viewFromDb(it.data)
-                    Toast.makeText(context, "LOAD FROM DB", Toast.LENGTH_SHORT).show()
-                }
+                Status.SUCCESS -> viewOneSuccess(it.data)
+                Status.ERROR ->  viewFromDb(it.data)
             }
         })
     }
@@ -87,15 +80,18 @@ class UsersFragment : Fragment() {
     }
 
     private fun viewOneSuccess(data: List<UsersTable>?) {
+        Toast.makeText(context, "LOAD FROM API", Toast.LENGTH_SHORT).show()
         data.let {
             usersAdapter.submitList(it)
         }
     }
 
     private fun viewFromDb(data: List<UsersTable>?) {
+        Toast.makeText(context, "INTERNET CONNECTION IS FAILED", Toast.LENGTH_SHORT)
+            .show()
+        Toast.makeText(context, "LOAD FROM DB", Toast.LENGTH_SHORT).show()
         data.let {
             usersAdapter.submitList(it)
         }
-
     }
 }
