@@ -20,6 +20,4 @@ interface UserDao {
 
     @Query("SELECT * FROM table_users WHERE uuid = :uuid")
     suspend fun getById(uuid: String): UsersTable
-
-
 }

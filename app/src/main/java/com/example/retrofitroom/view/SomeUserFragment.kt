@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -39,10 +38,9 @@ class SomeUserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val factory = SomeUserViewModelFactory(DI.repository)
-        someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
         val uuid = requireArguments().getString(UUID)
+        val factory = SomeUserViewModelFactory(DI.repository, uuid ?: "")
+        someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
         someUserViewModel.selectedUser.observe(viewLifecycleOwner, {
             it?.let { user: UsersTable ->
                 binding.apply {
@@ -55,7 +53,7 @@ class SomeUserFragment : Fragment() {
             }
         })
         lifecycleScope.launch {
-            someUserViewModel.getSelectedUser(uuid!!)
+            someUserViewModel.getSelectedUser()
         }
     }
 

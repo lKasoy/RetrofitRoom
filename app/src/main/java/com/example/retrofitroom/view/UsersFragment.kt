@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
 import com.example.retrofitroom.data.model.entity.UsersTable
@@ -20,7 +19,6 @@ import com.example.retrofitroom.mvvm.viewModel.UsersViewModel
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModelFactory
 import com.example.retrofitroom.services.Status
 import com.example.retrofitroom.services.UsersAdapter
-import kotlinx.coroutines.launch
 
 class UsersFragment : Fragment() {
 

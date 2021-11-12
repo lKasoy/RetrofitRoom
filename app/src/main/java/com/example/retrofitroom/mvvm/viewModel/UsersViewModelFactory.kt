@@ -16,11 +16,12 @@ class UsersViewModelFactory(
 }
 
 class SomeUserViewModelFactory(
-    private val repository: UserRepository
+    private val repository: UserRepository,
+    private val id: String
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SomeUserViewModel::class.java)) {
-            return SomeUserViewModel(repository) as T
+            return SomeUserViewModel(repository, id) as T
         }
         throw IllegalArgumentException("Unknown View Model")
     }

@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.retrofitroom.data.model.entity.Users
 import com.example.retrofitroom.data.model.entity.UsersTable
 import com.example.retrofitroom.databinding.FragmentItemBinding
 
@@ -17,8 +16,9 @@ class UsersAdapter(
 ) : ListAdapter<UsersTable, UsersAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =
-            FragmentItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = FragmentItemBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
         return ViewHolder(binding)
     }
 
@@ -31,6 +31,7 @@ class UsersAdapter(
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<UsersTable>() {
+
         override fun areItemsTheSame(oldItem: UsersTable, newItem: UsersTable): Boolean {
             return oldItem.uuid == newItem.uuid
         }
@@ -42,6 +43,7 @@ class UsersAdapter(
 
     class ViewHolder(private val binding: FragmentItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(result: UsersTable, onItemClick: (UsersTable) -> Unit) {
             binding.apply {
                 firstName.text = result.first
