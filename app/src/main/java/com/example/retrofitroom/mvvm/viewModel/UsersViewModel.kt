@@ -14,23 +14,22 @@ import kotlinx.coroutines.launch
 
 class UsersViewModel(private val repository: UserRepository) : ViewModel() {
 
-    private val _simpleLiveData = MutableLiveData<Event<List<UsersTable>>>()
-    val simpleLiveData: LiveData<Event<List<UsersTable>>> = _simpleLiveData
-    var isFirstResponse: Boolean = true
+    private val _loadingState = MutableLiveData<Event<List<UsersTable>>>()
+    val loadingState: LiveData<Event<List<UsersTable>>> = _loadingState
+    private var isFirstResponse: Boolean = true
 
     init {
         getUsers()
     }
 
     fun getUsers() {
-        _simpleLiveData.postValue(Event.loading())
+        _loadingState.postValue(Event.loading())
         this.viewModelScope.launch(Dispatchers.IO) {
             try {
-                val currentValue = _simpleLiveData.value
-                val currentList =
-                    if (currentValue?.status == Status.SUCCESS) {
-                        currentValue.data ?: listOf()
-                    } else listOf()
+                val currentValue = _loadingState.value
+                val currentList = if (currentValue?.status == Status.SUCCESS) {
+                    currentValue.data ?: listOf()
+                } else listOf()
                 val userList = repository.getUsersFromApi()
                 val userTable = toDatabase(userList)
                 if (isFirstResponse) {
@@ -38,10 +37,10 @@ class UsersViewModel(private val repository: UserRepository) : ViewModel() {
                     isFirstResponse = false
                 }
                 repository.add(userTable)
-                _simpleLiveData.postValue(Event.success(currentList + userTable))
+                _loadingState.postValue(Event.success(currentList + userTable))
             } catch (e: Exception) {
                 e.printStackTrace()
-                _simpleLiveData.postValue(Event.error(repository.getUsersFromDatabase()))
+                _loadingState.postValue(Event.error(repository.getUsersFromDatabase()))
             }
         }
     }

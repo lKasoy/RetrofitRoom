@@ -22,7 +22,6 @@ object DI {
 
     private val database: AppDatabase by lazy {
         Room.databaseBuilder(contextProvider(), AppDatabase::class.java, "users_database")
-            .allowMainThreadQueries()
             .build()
     }
 
@@ -61,5 +60,4 @@ object DI {
             apiService = apiService
         )
     }
-
 }

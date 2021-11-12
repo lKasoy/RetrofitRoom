@@ -19,7 +19,7 @@ interface UserDao {
     fun deleteAll()
 
     @Query("SELECT * FROM table_users WHERE uuid = :uuid")
-    fun getById(uuid: String): UsersTable
+    suspend fun getById(uuid: String): UsersTable
 
 
 }

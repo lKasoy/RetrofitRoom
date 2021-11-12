@@ -11,7 +11,7 @@ class UserRepository(private val dao: UserDao, private val apiService: ApiServic
 
     fun getUsersFromDatabase() = dao.getAllUsers()
 
-    fun getUserById(id: String) = dao.getById(id)
+    suspend fun getUserById(id: String) = dao.getById(id)
 
     fun deleteAll() = dao.deleteAll()
 

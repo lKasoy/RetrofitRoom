@@ -16,7 +16,7 @@ class SomeUserViewModel(
     private var _selectedUser: MutableLiveData<UsersTable> = MutableLiveData()
     val selectedUser: LiveData<UsersTable> = _selectedUser
 
-    fun getSelectedUser(id: String) {
+    suspend fun getSelectedUser(id: String) {
         _selectedUser.value = repository.getUserById(id)
     }
 }

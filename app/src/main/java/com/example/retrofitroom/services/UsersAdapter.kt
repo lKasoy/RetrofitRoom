@@ -17,7 +17,8 @@ class UsersAdapter(
 ) : ListAdapter<UsersTable, UsersAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = FragmentItemBinding.inflate(LayoutInflater.from(parent.context), parent,false)
+        val binding =
+            FragmentItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -28,16 +29,19 @@ class UsersAdapter(
             onEndReached()
         }
     }
+
     companion object DiffCallback : DiffUtil.ItemCallback<UsersTable>() {
         override fun areItemsTheSame(oldItem: UsersTable, newItem: UsersTable): Boolean {
             return oldItem.uuid == newItem.uuid
         }
 
         override fun areContentsTheSame(oldItem: UsersTable, newItem: UsersTable): Boolean {
-            return  oldItem.uuid == newItem.uuid
+            return oldItem == newItem
         }
     }
-    class ViewHolder(private val binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+    class ViewHolder(private val binding: FragmentItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(result: UsersTable, onItemClick: (UsersTable) -> Unit) {
             binding.apply {
                 firstName.text = result.first

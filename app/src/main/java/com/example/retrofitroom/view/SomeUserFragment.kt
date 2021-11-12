@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -20,6 +21,7 @@ import com.example.retrofitroom.databinding.FragmentSomeUserBinding
 import com.example.retrofitroom.di.DI
 import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModel
 import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModelFactory
+import kotlinx.coroutines.launch
 
 class SomeUserFragment : Fragment() {
 
@@ -41,8 +43,7 @@ class SomeUserFragment : Fragment() {
         val factory = SomeUserViewModelFactory(DI.repository)
         someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
         val uuid = requireArguments().getString(UUID)
-
-        someUserViewModel.selectedUser.observe(viewLifecycleOwner, Observer {
+        someUserViewModel.selectedUser.observe(viewLifecycleOwner, {
             it?.let { user: UsersTable ->
                 binding.apply {
                     showAvatar(user.large)
@@ -53,7 +54,9 @@ class SomeUserFragment : Fragment() {
                 }
             }
         })
-        someUserViewModel.getSelectedUser(uuid!!)
+        lifecycleScope.launch {
+            someUserViewModel.getSelectedUser(uuid!!)
+        }
     }
 
     private fun showAvatar(url: String) {
@@ -69,6 +72,7 @@ class SomeUserFragment : Fragment() {
                     binding.progress.visibility = View.GONE
                     return false
                 }
+
                 override fun onResourceReady(
                     resource: Drawable?,
                     model: Any?,

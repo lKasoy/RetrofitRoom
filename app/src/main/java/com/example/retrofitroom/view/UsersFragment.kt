@@ -1,7 +1,6 @@
 package com.example.retrofitroom.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
 import com.example.retrofitroom.data.model.entity.UsersTable
@@ -20,6 +20,7 @@ import com.example.retrofitroom.mvvm.viewModel.UsersViewModel
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModelFactory
 import com.example.retrofitroom.services.Status
 import com.example.retrofitroom.services.UsersAdapter
+import kotlinx.coroutines.launch
 
 class UsersFragment : Fragment() {
 
@@ -29,8 +30,6 @@ class UsersFragment : Fragment() {
             val userBundle = bundleOf(
                 UUID to user.uuid
             )
-            Log.d("MyApp", user.large)
-
             parentFragmentManager.commit {
                 setReorderingAllowed(true)
                 replace<SomeUserFragment>(R.id.container, args = userBundle)
@@ -62,34 +61,30 @@ class UsersFragment : Fragment() {
         binding.list.adapter = usersAdapter
         val factory = UsersViewModelFactory(DI.repository)
         fragmentListViewModel = ViewModelProvider(this, factory).get(UsersViewModel::class.java)
-        observeGetPosts()
+        subscribeLoadingState()
     }
 
-    private fun observeGetPosts() {
-        fragmentListViewModel.simpleLiveData.observe(viewLifecycleOwner, {
+    private fun subscribeLoadingState() {
+        fragmentListViewModel.loadingState.observe(viewLifecycleOwner, {
             when (it.status) {
-                Status.LOADING -> viewOneLoading()
-                Status.SUCCESS -> viewOneSuccess(it.data)
-                Status.ERROR ->  viewFromDb(it.data)
+                Status.LOADING -> showLoadingToast()
+                Status.SUCCESS -> {
+                    showUsers(it.data)
+                    Toast.makeText(context, "LOAD FROM API", Toast.LENGTH_SHORT).show()
+                }
+                Status.ERROR -> {
+                    showUsers(it.data)
+                    Toast.makeText(context, "LOAD FROM DB", Toast.LENGTH_SHORT).show()
+                }
             }
         })
     }
 
-    private fun viewOneLoading() {
+    private fun showLoadingToast() {
         Toast.makeText(context, "LOADING", Toast.LENGTH_SHORT).show()
     }
 
-    private fun viewOneSuccess(data: List<UsersTable>?) {
-        Toast.makeText(context, "LOAD FROM API", Toast.LENGTH_SHORT).show()
-        data.let {
-            usersAdapter.submitList(it)
-        }
-    }
-
-    private fun viewFromDb(data: List<UsersTable>?) {
-        Toast.makeText(context, "INTERNET CONNECTION IS FAILED", Toast.LENGTH_SHORT)
-            .show()
-        Toast.makeText(context, "LOAD FROM DB", Toast.LENGTH_SHORT).show()
+    private fun showUsers(data: List<UsersTable>?) {
         data.let {
             usersAdapter.submitList(it)
         }
