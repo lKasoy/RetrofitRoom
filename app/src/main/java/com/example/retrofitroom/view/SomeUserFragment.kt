@@ -39,7 +39,7 @@ class SomeUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val uuid = requireArguments().getString(UUID)
-        val factory = SomeUserViewModelFactory(DI.repository, uuid ?: "")
+        val factory = SomeUserViewModelFactory(DI.daoRepository, uuid ?: "")
         someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
         someUserViewModel.selectedUser.observe(viewLifecycleOwner, {
             it?.let { user: UsersTable ->

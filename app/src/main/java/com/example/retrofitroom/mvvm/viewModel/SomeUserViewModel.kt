@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.retrofitroom.data.model.entity.UsersTable
-import com.example.retrofitroom.data.model.repository.UserRepository
+import com.example.retrofitroom.data.model.repository.DaoRepository
 
 class SomeUserViewModel(
-    private val repository: UserRepository,
+    private val repository: DaoRepository,
     private val id: String
 ) : ViewModel() {
 

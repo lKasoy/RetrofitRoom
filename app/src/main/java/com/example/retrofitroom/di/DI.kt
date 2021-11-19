@@ -6,7 +6,9 @@ import com.example.retrofitroom.constants.Constants
 import com.example.retrofitroom.data.model.AppDatabase
 import com.example.retrofitroom.data.model.dao.UserDao
 import com.example.retrofitroom.data.model.network.ApiService
-import com.example.retrofitroom.data.model.repository.UserRepository
+import com.example.retrofitroom.data.model.repository.ApiRepository
+import com.example.retrofitroom.data.model.repository.DaoRepository
+import com.example.retrofitroom.data.model.repository.DecoratorRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -53,11 +55,22 @@ object DI {
             .build()
             .create(ApiService::class.java)
     }
-
-    val repository: UserRepository by lazy {
-        UserRepository(
-            dao = dao,
+    private val apiRepository: ApiRepository by lazy {
+        ApiRepository(
             apiService = apiService
+        )
+    }
+
+    val daoRepository: DaoRepository by lazy {
+        DaoRepository(
+            dao = dao,
+        )
+    }
+
+    val decoratorRepository: DecoratorRepository by lazy {
+        DecoratorRepository(
+            apiRepository = apiRepository,
+            daoRepository = daoRepository
         )
     }
 }

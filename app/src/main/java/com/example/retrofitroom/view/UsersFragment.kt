@@ -17,7 +17,7 @@ import com.example.retrofitroom.databinding.FragmentItemListBinding
 import com.example.retrofitroom.di.DI
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModel
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModelFactory
-import com.example.retrofitroom.services.Status
+import com.example.retrofitroom.services.LoadingState
 import com.example.retrofitroom.services.UsersAdapter
 
 class UsersFragment : Fragment() {
@@ -34,7 +34,7 @@ class UsersFragment : Fragment() {
                 addToBackStack(null)
             }
         }, onEndReached = {
-            fragmentListViewModel.getUsers()
+            fragmentListViewModel.fetchData()
         }
     )
 
@@ -57,34 +57,16 @@ class UsersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.list.adapter = usersAdapter
-        val factory = UsersViewModelFactory(DI.repository)
+        val factory = UsersViewModelFactory(DI.decoratorRepository)
         fragmentListViewModel = ViewModelProvider(this, factory).get(UsersViewModel::class.java)
-        subscribeLoadingState()
+        subscribeData()
     }
 
-    private fun subscribeLoadingState() {
-        fragmentListViewModel.loadingState.observe(viewLifecycleOwner, {
-            when (it.status) {
-                Status.LOADING -> showLoadingToast()
-                Status.SUCCESS -> {
-                    showUsers(it.data)
-                    Toast.makeText(context, "LOAD FROM API", Toast.LENGTH_SHORT).show()
-                }
-                Status.ERROR -> {
-                    showUsers(it.data)
-                    Toast.makeText(context, "LOAD FROM DB", Toast.LENGTH_SHORT).show()
-                }
+    private fun subscribeData() {
+        fragmentListViewModel.data.observe(viewLifecycleOwner, {
+            it.let {
+                usersAdapter.submitList(it)
             }
         })
-    }
-
-    private fun showLoadingToast() {
-        Toast.makeText(context, "LOADING", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun showUsers(data: List<UsersTable>?) {
-        data.let {
-            usersAdapter.submitList(it)
-        }
     }
 }

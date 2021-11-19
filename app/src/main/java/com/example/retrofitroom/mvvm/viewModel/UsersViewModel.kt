@@ -5,46 +5,33 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.retrofitroom.data.model.entity.UsersTable
-import com.example.retrofitroom.data.model.entity.UsersTable.Companion.toDatabase
-import com.example.retrofitroom.data.model.repository.UserRepository
-import com.example.retrofitroom.services.Event
-import com.example.retrofitroom.services.Status
-import kotlinx.coroutines.Dispatchers
+import com.example.retrofitroom.data.model.repository.DecoratorRepository
+import com.example.retrofitroom.services.LoadingState
 import kotlinx.coroutines.launch
 
-class UsersViewModel(private val repository: UserRepository) : ViewModel() {
+class UsersViewModel(private val decoratorRepository: DecoratorRepository) : ViewModel() {
 
-    private val _loadingState = MutableLiveData<Event<List<UsersTable>>>()
-    val loadingState: LiveData<Event<List<UsersTable>>> = _loadingState
-    private var isFirstResponse: Boolean = true
+    private val _loadingState = MutableLiveData<LoadingState>()
+    private val _data = MutableLiveData<List<UsersTable>>()
+    val data: LiveData<List<UsersTable>> = _data
 
     init {
-        getUsers()
+        fetchData()
     }
 
-    fun getUsers() {
-        _loadingState.postValue(Event.loading())
-        this.viewModelScope.launch(Dispatchers.IO) {
+    fun fetchData() {
+        viewModelScope.launch {
             try {
-                val currentValue = _loadingState.value
-                val currentList = if (currentValue?.status == Status.SUCCESS) {
-                    currentValue.data ?: listOf()
-                } else listOf()
-                val userList = repository.getUsersFromApi()
-                val userTable = toDatabase(userList)
-                if (isFirstResponse) {
-                    repository.deleteAll()
-                    isFirstResponse = false
-                }
-                repository.add(userTable)
-                _loadingState.postValue(Event.success(currentList + userTable))
+                _loadingState.value = LoadingState.LOADING
+                val users = decoratorRepository.getUsers()
+                val currentUsers = _data.value ?: listOf()
+                _data.value = currentUsers + users
+                _loadingState.value = LoadingState.LOADED
             } catch (e: Exception) {
-                e.printStackTrace()
-                _loadingState.postValue(Event.error(repository.getUsersFromDatabase()))
+                _loadingState.value = LoadingState.error(e.message)
             }
         }
     }
 }
-
 
 

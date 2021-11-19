@@ -10,13 +10,13 @@ import com.example.retrofitroom.data.model.entity.UsersTable
 interface UserDao {
 
     @Query("SELECT * FROM table_users")
-    fun getAllUsers(): List<UsersTable>
+    suspend fun getAllUsers(): List<UsersTable>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(result: List<UsersTable>)
+    suspend fun add(users: List<UsersTable>)
 
     @Query("DELETE FROM table_users")
-    fun deleteAll()
+    suspend fun deleteAll()
 
     @Query("SELECT * FROM table_users WHERE uuid = :uuid")
     suspend fun getById(uuid: String): UsersTable
