@@ -37,7 +37,7 @@ class UsersAdapter(
         }
 
         override fun areContentsTheSame(oldItem: UsersTable, newItem: UsersTable): Boolean {
-            return oldItem.uuid== newItem.uuid
+            return oldItem == newItem
         }
     }
 
