@@ -16,5 +16,6 @@ class SomeUserViewModel(
 
     suspend fun getSelectedUser() {
         _selectedUser.value = repository.getUserById(id)
+     //*dasd
     }
 }
