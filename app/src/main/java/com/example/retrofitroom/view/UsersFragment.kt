@@ -4,20 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
+import com.example.retrofitroom.App
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
 import com.example.retrofitroom.data.model.entity.UsersTable
 import com.example.retrofitroom.databinding.FragmentItemListBinding
-import com.example.retrofitroom.di.DI
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModel
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModelFactory
-import com.example.retrofitroom.services.LoadingState
 import com.example.retrofitroom.services.UsersAdapter
 
 class UsersFragment : Fragment() {
@@ -57,7 +55,8 @@ class UsersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.list.adapter = usersAdapter
-        val factory = UsersViewModelFactory(DI.decoratorRepository)
+
+        val factory = UsersViewModelFactory(App.repository)
         fragmentListViewModel = ViewModelProvider(this, factory).get(UsersViewModel::class.java)
         subscribeData()
     }

@@ -1,8 +1,8 @@
 package com.example.retrofitroom.data.model.repository
 
-import com.example.retrofitroom.data.model.network.ApiService
+import com.example.retrofitroom.data.model.network.UserApi
 
-class ApiRepository(private val apiService: ApiService) {
+class ApiRepository(private val userApi: UserApi) {
 
-    suspend fun getUsersFromApi() = apiService.getUsersAsync(15)
+    suspend fun getUsersFromApi() = userApi.getUsersAsync(15)
 }

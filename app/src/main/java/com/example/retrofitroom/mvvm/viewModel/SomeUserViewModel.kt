@@ -5,9 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.retrofitroom.data.model.entity.UsersTable
 import com.example.retrofitroom.data.model.repository.DaoRepository
+import com.example.retrofitroom.data.model.repository.DecoratorRepository
 
 class SomeUserViewModel(
-    private val repository: DaoRepository,
+    private val decoratorRepository: DecoratorRepository,
     private val id: String
 ) : ViewModel() {
 
@@ -15,7 +16,6 @@ class SomeUserViewModel(
     val selectedUser: LiveData<UsersTable> = _selectedUser
 
     suspend fun getSelectedUser() {
-        _selectedUser.value = repository.getUserById(id)
-     //*dasd
+        _selectedUser.value = decoratorRepository.getUserById(id)
     }
 }

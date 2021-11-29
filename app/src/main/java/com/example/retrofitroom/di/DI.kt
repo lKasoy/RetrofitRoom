@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.example.retrofitroom.constants.Constants
 import com.example.retrofitroom.data.model.AppDatabase
 import com.example.retrofitroom.data.model.dao.UserDao
-import com.example.retrofitroom.data.model.network.ApiService
+import com.example.retrofitroom.data.model.network.UserApi
 import com.example.retrofitroom.data.model.repository.ApiRepository
 import com.example.retrofitroom.data.model.repository.DaoRepository
 import com.example.retrofitroom.data.model.repository.DecoratorRepository
@@ -47,17 +47,17 @@ object DI {
             .build()
     }
 
-    private val apiService: ApiService by lazy {
+    private val userApi: UserApi by lazy {
         Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
-            .create(ApiService::class.java)
+            .create(UserApi::class.java)
     }
     private val apiRepository: ApiRepository by lazy {
         ApiRepository(
-            apiService = apiService
+            userApi = userApi
         )
     }
 

@@ -18,12 +18,12 @@ class UsersViewModelFactory(
 }
 
 class SomeUserViewModelFactory(
-    private val daoRepository: DaoRepository,
+    private val decoratorRepository: DecoratorRepository,
     private val id: String
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SomeUserViewModel::class.java)) {
-            return SomeUserViewModel(daoRepository, id) as T
+            return SomeUserViewModel(decoratorRepository, id) as T
         }
         throw IllegalArgumentException("Unknown View Model")
     }

@@ -2,8 +2,9 @@ package com.example.retrofitroom.data.model.repository
 
 import com.example.retrofitroom.data.model.dao.UserDao
 import com.example.retrofitroom.data.model.entity.UsersTable
+import javax.inject.Inject
 
-class DaoRepository(private val dao: UserDao) {
+class DaoRepository @Inject constructor(private val dao: UserDao) {
 
     suspend fun deleteAll() = dao.deleteAll()
 

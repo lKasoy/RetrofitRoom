@@ -13,11 +13,14 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.example.retrofitroom.App
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
 import com.example.retrofitroom.data.model.entity.UsersTable
+import com.example.retrofitroom.data.model.repository.DaoRepository
+import com.example.retrofitroom.data.model.repository.DecoratorRepository
 import com.example.retrofitroom.databinding.FragmentSomeUserBinding
-import com.example.retrofitroom.di.DI
+//import com.example.retrofitroom.di.DI
 import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModel
 import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModelFactory
 import kotlinx.coroutines.launch
@@ -39,7 +42,8 @@ class SomeUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val uuid = requireArguments().getString(UUID)
-        val factory = SomeUserViewModelFactory(DI.daoRepository, uuid ?: "")
+
+        val factory = SomeUserViewModelFactory(App.repository , uuid ?: "")
         someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
         someUserViewModel.selectedUser.observe(viewLifecycleOwner, {
             it?.let { user: UsersTable ->
