@@ -9,14 +9,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
-import com.example.retrofitroom.App
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
+import com.example.retrofitroom.dagger.AppModule
+import com.example.retrofitroom.dagger.DaggerNewComponent
 import com.example.retrofitroom.data.model.entity.UsersTable
+import com.example.retrofitroom.data.model.repository.DecoratorRepository
 import com.example.retrofitroom.databinding.FragmentItemListBinding
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModel
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModelFactory
 import com.example.retrofitroom.services.UsersAdapter
+import javax.inject.Inject
 
 class UsersFragment : Fragment() {
 
@@ -35,6 +38,9 @@ class UsersFragment : Fragment() {
             fragmentListViewModel.fetchData()
         }
     )
+
+    @Inject
+    lateinit var repository: DecoratorRepository
 
     private lateinit var fragmentListViewModel: UsersViewModel
 
@@ -56,7 +62,11 @@ class UsersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.list.adapter = usersAdapter
 
-        val factory = UsersViewModelFactory(App.repository)
+        DaggerNewComponent.builder()
+            .appModule(context?.let { AppModule(it) })
+            .build().inject(this)
+
+        val factory = UsersViewModelFactory(repository)
         fragmentListViewModel = ViewModelProvider(this, factory).get(UsersViewModel::class.java)
         subscribeData()
     }

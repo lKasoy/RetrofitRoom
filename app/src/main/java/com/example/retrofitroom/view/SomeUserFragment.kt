@@ -13,22 +13,25 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.example.retrofitroom.App
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
+import com.example.retrofitroom.dagger.AppModule
+import com.example.retrofitroom.dagger.DaggerNewComponent
 import com.example.retrofitroom.data.model.entity.UsersTable
-import com.example.retrofitroom.data.model.repository.DaoRepository
 import com.example.retrofitroom.data.model.repository.DecoratorRepository
 import com.example.retrofitroom.databinding.FragmentSomeUserBinding
-//import com.example.retrofitroom.di.DI
 import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModel
 import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModelFactory
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class SomeUserFragment : Fragment() {
 
     private lateinit var binding: FragmentSomeUserBinding
     private lateinit var someUserViewModel: SomeUserViewModel
+
+    @Inject
+    lateinit var repository: DecoratorRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +46,11 @@ class SomeUserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val uuid = requireArguments().getString(UUID)
 
-        val factory = SomeUserViewModelFactory(App.repository , uuid ?: "")
+        DaggerNewComponent.builder()
+            .appModule(AppModule(requireContext()))
+            .build().inject(this)
+
+        val factory = SomeUserViewModelFactory(repository, uuid ?: "")
         someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
         someUserViewModel.selectedUser.observe(viewLifecycleOwner, {
             it?.let { user: UsersTable ->
