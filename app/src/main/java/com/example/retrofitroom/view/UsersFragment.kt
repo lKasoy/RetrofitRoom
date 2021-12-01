@@ -11,16 +11,16 @@ import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
-import com.example.retrofitroom.dagger.AppModule
-import com.example.retrofitroom.dagger.DaggerNewComponent
 import com.example.retrofitroom.data.model.entity.UsersTable
 import com.example.retrofitroom.data.model.repository.DecoratorRepository
 import com.example.retrofitroom.databinding.FragmentItemListBinding
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModel
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModelFactory
 import com.example.retrofitroom.services.UsersAdapter
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class UsersFragment : Fragment() {
 
     private lateinit var binding: FragmentItemListBinding
@@ -62,9 +62,9 @@ class UsersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.list.adapter = usersAdapter
 
-        DaggerNewComponent.builder()
-            .appModule(context?.let { AppModule(it) })
-            .build().inject(this)
+//        DaggerNewComponent.builder()
+//            .appModule(context?.let { AppModule(it) })
+//            .build().inject(this)
 
         val factory = UsersViewModelFactory(repository)
         fragmentListViewModel = ViewModelProvider(this, factory).get(UsersViewModel::class.java)
