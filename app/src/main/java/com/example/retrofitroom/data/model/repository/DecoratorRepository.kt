@@ -4,11 +4,10 @@ import com.example.retrofitroom.data.model.entity.UsersTable
 import com.example.retrofitroom.data.model.entity.UsersTable.Companion.toDatabase
 import javax.inject.Inject
 
-class DecoratorRepository @Inject constructor(
+class DecoratorRepository (
     private val apiRepository: ApiRepository,
     private val daoRepository: DaoRepository
 ) {
-
     private var isFirstResponse: Boolean = true
 
     suspend fun getUsers(): List<UsersTable> {

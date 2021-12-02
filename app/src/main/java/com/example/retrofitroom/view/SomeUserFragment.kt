@@ -20,18 +20,15 @@ import com.example.retrofitroom.data.model.repository.DecoratorRepository
 import com.example.retrofitroom.databinding.FragmentSomeUserBinding
 import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModel
 import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModelFactory
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class SomeUserFragment : Fragment() {
 
     private lateinit var binding: FragmentSomeUserBinding
     private lateinit var someUserViewModel: SomeUserViewModel
-
-    @Inject
-    lateinit var repository: DecoratorRepository
+    private val repository by inject<DecoratorRepository>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,11 +42,6 @@ class SomeUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val uuid = requireArguments().getString(UUID)
-
-//        DaggerNewComponent.builder()
-//            .appModule(AppModule(requireContext()))
-//            .build().inject(this)
-
         val factory = SomeUserViewModelFactory(repository, uuid ?: "")
         someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
         someUserViewModel.selectedUser.observe(viewLifecycleOwner, {

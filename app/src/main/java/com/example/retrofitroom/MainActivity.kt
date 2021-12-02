@@ -10,7 +10,6 @@ import com.example.retrofitroom.view.UsersFragment
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.internal.DaggerCollections
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
