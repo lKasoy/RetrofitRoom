@@ -43,19 +43,23 @@ val netModule = module {
         return GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create()
     }
 
-    fun provideRetrofit(factory: Gson, client: OkHttpClient): UserApi {
+    fun provideRetrofit(factory: Gson, client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(factory))
             .client(client)
             .build()
-            .create(UserApi::class.java)
+    }
+
+    fun provideApi(retrofit: Retrofit): UserApi{
+        return retrofit.create(UserApi::class.java)
     }
 
     single { provideCache(androidApplication()) }
     single { provideHttpClient(get()) }
     single { provideGson() }
     single { provideRetrofit(get(),get()) }
+    single { provideApi(get())}
 }
 
 val dataBaseModule = module {
