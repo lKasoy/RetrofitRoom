@@ -7,7 +7,6 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.retrofitroom.databinding.ActivityMainBinding
 import com.example.retrofitroom.view.UsersFragment
-import dagger.internal.DaggerCollections
 
 class MainActivity : AppCompatActivity() {
 

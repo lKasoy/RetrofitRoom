@@ -47,7 +47,7 @@ class SomeUserFragment : Fragment() {
         val uuid = requireArguments().getString(UUID)
 
         DaggerNewComponent.builder()
-            .appModule(AppModule(requireContext()))
+            .appModule(context?.let { AppModule(it) })
             .build().inject(this)
 
         val factory = SomeUserViewModelFactory(repository, uuid ?: "")
