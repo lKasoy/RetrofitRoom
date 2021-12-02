@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.retrofitroom.data.model.entity.UsersTable
-import com.example.retrofitroom.data.model.repository.DaoRepository
 import com.example.retrofitroom.data.model.repository.DecoratorRepository
 
 class SomeUserViewModel(
