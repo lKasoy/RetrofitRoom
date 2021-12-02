@@ -1,4 +1,4 @@
-package com.example.retrofitroom.dagger
+package com.example.retrofitroom.hilt
 
 import android.app.Application
 import android.content.Context
@@ -10,9 +10,6 @@ import com.example.retrofitroom.data.model.network.UserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.components.FragmentComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -46,20 +43,31 @@ class RoomModule {
 @InstallIn(SingletonComponent::class)
 class ApiModule {
     @Provides
-    fun provideApiModule(): UserApi {
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
+    fun provideApiModule(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
-        val client = OkHttpClient
-            .Builder()
-            .addInterceptor(loggingInterceptor)
-            .build()
+    }
 
+    @Provides
+    fun provideClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+        return OkHttpClient
+            .Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
+    }
+
+    @Provides
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
+            .client(okHttpClient)
             .build()
-            .create(UserApi::class.java)
+    }
+
+    @Provides
+    fun provideApi(retrofit: Retrofit): UserApi {
+        return retrofit.create(UserApi::class.java)
     }
 }
