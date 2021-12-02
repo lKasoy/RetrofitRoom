@@ -45,11 +45,6 @@ class SomeUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val uuid = requireArguments().getString(UUID)
-
-//        DaggerNewComponent.builder()
-//            .appModule(AppModule(requireContext()))
-//            .build().inject(this)
-
         val factory = SomeUserViewModelFactory(repository, uuid ?: "")
         someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
         someUserViewModel.selectedUser.observe(viewLifecycleOwner, {

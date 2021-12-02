@@ -61,11 +61,6 @@ class UsersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.list.adapter = usersAdapter
-
-//        DaggerNewComponent.builder()
-//            .appModule(context?.let { AppModule(it) })
-//            .build().inject(this)
-
         val factory = UsersViewModelFactory(repository)
         fragmentListViewModel = ViewModelProvider(this, factory).get(UsersViewModel::class.java)
         subscribeData()
