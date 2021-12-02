@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.retrofitroom.data.model.entity.UsersTable
 import com.example.retrofitroom.data.model.repository.DecoratorRepository
-import com.example.retrofitroom.services.LoadingState
 import kotlinx.coroutines.launch
 
 class UsersViewModel(private val decoratorRepository: DecoratorRepository) : ViewModel() {
