@@ -6,6 +6,8 @@ import com.example.retrofitroom.constants.Constants
 import com.example.retrofitroom.data.model.AppDatabase
 import com.example.retrofitroom.data.model.dao.UserDao
 import com.example.retrofitroom.data.model.network.UserApi
+import com.example.retrofitroom.data.model.repository.DecoratorRepository
+import com.example.retrofitroom.mvvm.viewModel.UsersViewModel
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -37,20 +39,37 @@ class RoomModule {
 @Module
 class ApiModule {
     @Provides
-    fun provideApiModule(): UserApi {
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
-        val client = OkHttpClient
-            .Builder()
-            .addInterceptor(loggingInterceptor)
-            .build()
+    }
 
+    @Provides
+    fun provideClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+        return OkHttpClient
+            .Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
+    }
+
+    @Provides
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
+            .client(okHttpClient)
             .build()
-            .create(UserApi::class.java)
+    }
+
+    @Provides
+    fun provideApi(retrofit: Retrofit): UserApi {
+        return retrofit.create(UserApi::class.java)
+    }
+}
+@Module
+class UserViewModelModule{
+    fun provideUserViewModel(decoratorRepository: DecoratorRepository): UsersViewModel{
+        return UsersViewModel(decoratorRepository)
     }
 }

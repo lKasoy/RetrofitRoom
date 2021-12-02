@@ -11,8 +11,7 @@ import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
-import com.example.retrofitroom.dagger.AppModule
-import com.example.retrofitroom.dagger.DaggerNewComponent
+import com.example.retrofitroom.dagger.App
 import com.example.retrofitroom.data.model.entity.UsersTable
 import com.example.retrofitroom.data.model.repository.DecoratorRepository
 import com.example.retrofitroom.databinding.FragmentItemListBinding
@@ -61,11 +60,7 @@ class UsersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.list.adapter = usersAdapter
-
-        DaggerNewComponent.builder()
-            .appModule(context?.let { AppModule(it) })
-            .build().inject(this)
-
+        (requireContext().applicationContext as App).component.inject(this)
         val factory = UsersViewModelFactory(repository)
         fragmentListViewModel = ViewModelProvider(this, factory).get(UsersViewModel::class.java)
         subscribeData()

@@ -2,8 +2,6 @@ package com.example.retrofitroom.mvvm.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.retrofitroom.data.model.repository.ApiRepository
-import com.example.retrofitroom.data.model.repository.DaoRepository
 import com.example.retrofitroom.data.model.repository.DecoratorRepository
 
 class UsersViewModelFactory(

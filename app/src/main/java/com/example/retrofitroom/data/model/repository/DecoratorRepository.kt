@@ -25,5 +25,5 @@ class DecoratorRepository @Inject constructor(
         }
     }
 
-    suspend fun getUserById(id: String) = daoRepository.getUserById(id)
+    suspend fun getUserById(id: String): UsersTable = daoRepository.getUserById(id)
 }

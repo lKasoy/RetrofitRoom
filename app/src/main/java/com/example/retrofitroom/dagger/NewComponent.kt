@@ -11,10 +11,11 @@ import javax.inject.Singleton
         AppModule::class,
         RoomModule::class,
         ApiModule::class,
+        UserViewModelModule::class
     ]
 )
 
 interface NewComponent {
-    fun inject(fragment: SomeUserFragment)
     fun inject(fragment: UsersFragment)
+    fun inject(fragment: SomeUserFragment)
 }

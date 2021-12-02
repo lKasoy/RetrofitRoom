@@ -15,8 +15,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
-import com.example.retrofitroom.dagger.AppModule
-import com.example.retrofitroom.dagger.DaggerNewComponent
+import com.example.retrofitroom.dagger.App
 import com.example.retrofitroom.data.model.entity.UsersTable
 import com.example.retrofitroom.data.model.repository.DecoratorRepository
 import com.example.retrofitroom.databinding.FragmentSomeUserBinding
@@ -45,11 +44,7 @@ class SomeUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val uuid = requireArguments().getString(UUID)
-
-        DaggerNewComponent.builder()
-            .appModule(context?.let { AppModule(it) })
-            .build().inject(this)
-
+        (requireContext().applicationContext as App).component.inject(this)
         val factory = SomeUserViewModelFactory(repository, uuid ?: "")
         someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
         someUserViewModel.selectedUser.observe(viewLifecycleOwner, {
