@@ -34,7 +34,6 @@ class UsersFragment : Fragment() {
         }
     )
     private val fragmentListViewModel by viewModel<UsersViewModel>()
-//    private val repository by inject<DecoratorRepository>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,8 +53,6 @@ class UsersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.list.adapter = usersAdapter
 
-//        val factory = UsersViewModelFactory(repository)
-//        fragmentListViewModel = ViewModelProvider(this, factory).get(UsersViewModel::class.java)
         subscribeData()
     }
 

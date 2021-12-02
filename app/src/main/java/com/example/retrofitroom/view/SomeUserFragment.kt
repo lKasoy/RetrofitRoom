@@ -22,7 +22,6 @@ import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModel
 import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModelFactory
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SomeUserFragment : Fragment() {
 
