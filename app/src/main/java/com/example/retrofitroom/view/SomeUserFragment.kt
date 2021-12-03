@@ -26,8 +26,16 @@ import javax.inject.Inject
 class SomeUserFragment : Fragment() {
 
     private lateinit var binding: FragmentSomeUserBinding
+
     @Inject
     lateinit var someUserViewModelFactory: SomeUserViewModel.SomeUserViewModelFactory
+
+    private val uuid by lazy {
+        requireArguments().getString(UUID) ?: throw IllegalStateException("No uuid")
+    }
+    private val someUserViewModel: SomeUserViewModel by viewModels {
+        SomeUserViewModel.provideFactory(someUserViewModelFactory, uuid)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,11 +48,6 @@ class SomeUserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val uuid = requireArguments().getString(UUID)
-
-        val someUserViewModel: SomeUserViewModel by viewModels {
-            SomeUserViewModel.provideFactory(someUserViewModelFactory, uuid!!)
-        }
 
         someUserViewModel.selectedUser.observe(viewLifecycleOwner, {
             it?.let { user: UsersTable ->
@@ -57,9 +60,7 @@ class SomeUserFragment : Fragment() {
                 }
             }
         })
-        lifecycleScope.launch {
-            someUserViewModel.getSelectedUser()
-        }
+        someUserViewModel.getSelectedUser()
     }
 
     private fun showAvatar(url: String) {
