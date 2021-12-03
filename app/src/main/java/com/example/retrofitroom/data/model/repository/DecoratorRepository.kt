@@ -26,5 +26,4 @@ class DecoratorRepository @Inject constructor(
     }
 
     suspend fun getUserById(id: String) = daoRepository.getUserById(id)
-
 }

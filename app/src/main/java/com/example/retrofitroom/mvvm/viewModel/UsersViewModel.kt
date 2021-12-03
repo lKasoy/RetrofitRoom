@@ -12,7 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UsersViewModel @Inject constructor(
-    private val decoratorRepository: DecoratorRepository) : ViewModel() {
+    private val decoratorRepository: DecoratorRepository
+) : ViewModel() {
 
     private val _data = MutableLiveData<List<UsersTable>>()
     val data: LiveData<List<UsersTable>> = _data
@@ -28,6 +29,7 @@ class UsersViewModel @Inject constructor(
                 val currentUsers = _data.value ?: listOf()
                 _data.value = currentUsers + users
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

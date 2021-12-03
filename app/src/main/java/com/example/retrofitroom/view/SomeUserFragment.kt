@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -16,7 +17,7 @@ import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
 import com.example.retrofitroom.data.model.entity.UsersTable
 import com.example.retrofitroom.databinding.FragmentSomeUserBinding
-import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModelFactory
+import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,9 +26,8 @@ import javax.inject.Inject
 class SomeUserFragment : Fragment() {
 
     private lateinit var binding: FragmentSomeUserBinding
-
     @Inject
-    lateinit var someUserViewModelFactory: SomeUserViewModelFactory
+    lateinit var someUserViewModelFactory: SomeUserViewModel.SomeUserViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +42,9 @@ class SomeUserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val uuid = requireArguments().getString(UUID)
 
-        val someUserViewModel = someUserViewModelFactory.create(uuid!!)
+        val someUserViewModel: SomeUserViewModel by viewModels {
+            SomeUserViewModel.provideFactory(someUserViewModelFactory, uuid!!)
+        }
 
         someUserViewModel.selectedUser.observe(viewLifecycleOwner, {
             it?.let { user: UsersTable ->

@@ -9,6 +9,7 @@ import com.example.retrofitroom.data.model.network.UserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
@@ -63,3 +64,7 @@ class ApiModule {
         return retrofit.create(UserApi::class.java)
     }
 }
+
+@Module
+@InstallIn(ActivityRetainedComponent::class)
+interface AssistedInjectModule
