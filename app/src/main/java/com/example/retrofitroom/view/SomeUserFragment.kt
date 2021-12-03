@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -16,18 +14,22 @@ import com.bumptech.glide.request.target.Target
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
 import com.example.retrofitroom.data.model.entity.UsersTable
-import com.example.retrofitroom.data.model.repository.DecoratorRepository
 import com.example.retrofitroom.databinding.FragmentSomeUserBinding
 import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModel
-import com.example.retrofitroom.mvvm.viewModel.SomeUserViewModelFactory
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class SomeUserFragment : Fragment() {
 
     private lateinit var binding: FragmentSomeUserBinding
-    private lateinit var someUserViewModel: SomeUserViewModel
-    private val repository by inject<DecoratorRepository>()
+
+    private val someUserViewModel by viewModel<SomeUserViewModel>(parameters = {
+        parametersOf(uuid)
+    })
+
+    private val uuid by lazy {
+        requireArguments().getString(UUID) ?: throw IllegalStateException("No uuid")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,9 +42,6 @@ class SomeUserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val uuid = requireArguments().getString(UUID)
-        val factory = SomeUserViewModelFactory(repository, uuid ?: "")
-        someUserViewModel = ViewModelProvider(this, factory).get(SomeUserViewModel::class.java)
         someUserViewModel.selectedUser.observe(viewLifecycleOwner, {
             it?.let { user: UsersTable ->
                 binding.apply {
@@ -54,9 +53,7 @@ class SomeUserFragment : Fragment() {
                 }
             }
         })
-        lifecycleScope.launch {
-            someUserViewModel.getSelectedUser()
-        }
+        someUserViewModel.getSelectedUser()
     }
 
     private fun showAvatar(url: String) {

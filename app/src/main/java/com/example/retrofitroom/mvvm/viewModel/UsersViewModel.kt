@@ -24,6 +24,7 @@ class UsersViewModel(private val decoratorRepository: DecoratorRepository) : Vie
                 val currentUsers = _data.value ?: listOf()
                 _data.value = currentUsers + users
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

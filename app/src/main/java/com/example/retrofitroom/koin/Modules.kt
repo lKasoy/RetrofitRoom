@@ -14,28 +14,26 @@ import com.example.retrofitroom.mvvm.viewModel.UsersViewModel
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import okhttp3.Cache
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val viewModelModule = module {
-    single { UsersViewModel(get()) }
-//    single { SomeUserViewModel(get(),get()) }
+    viewModel {
+        UsersViewModel(get())
+    }
+    viewModel { parameters ->
+        SomeUserViewModel(get(), parameters[0])
+    }
 }
 
-
 val netModule = module {
-    fun provideCache(application: Application): Cache {
-        val cacheSize = 10 * 1024 * 1024
-        return Cache(application.cacheDir,cacheSize.toLong())
-    }
 
-    fun provideHttpClient(cache: Cache): OkHttpClient {
+    fun provideHttpClient(): OkHttpClient {
         val okHttpClientBuilder = OkHttpClient.Builder()
-            .cache(cache)
         return okHttpClientBuilder.build()
     }
 
@@ -51,21 +49,20 @@ val netModule = module {
             .build()
     }
 
-    fun provideApi(retrofit: Retrofit): UserApi{
+    fun provideApi(retrofit: Retrofit): UserApi {
         return retrofit.create(UserApi::class.java)
     }
 
-    single { provideCache(androidApplication()) }
-    single { provideHttpClient(get()) }
-    single { provideGson() }
-    single { provideRetrofit(get(),get()) }
-    single { provideApi(get())}
+    factory { provideHttpClient() }
+    factory { provideGson() }
+    factory { provideRetrofit(get(), get()) }
+    factory { provideApi(get()) }
 }
 
 val dataBaseModule = module {
 
     fun provideDatabase(application: Application): AppDatabase {
-        return Room.databaseBuilder(application,AppDatabase::class.java,"users")
+        return Room.databaseBuilder(application, AppDatabase::class.java, "users")
             .build()
     }
 
@@ -79,7 +76,7 @@ val dataBaseModule = module {
 
 val repositoryModule = module {
 
-    fun provideApiRepository(userApi: UserApi): ApiRepository{
+    fun provideApiRepository(userApi: UserApi): ApiRepository {
         return ApiRepository(userApi)
     }
 
@@ -87,11 +84,14 @@ val repositoryModule = module {
         return DaoRepository(dao)
     }
 
-    fun provideDecoratorRepository(apiRepository: ApiRepository, daoRepository: DaoRepository): DecoratorRepository {
-        return DecoratorRepository(apiRepository,daoRepository)
+    fun provideDecoratorRepository(
+        apiRepository: ApiRepository,
+        daoRepository: DaoRepository
+    ): DecoratorRepository {
+        return DecoratorRepository(apiRepository, daoRepository)
     }
 
-    single { provideApiRepository(get()) }
-    single { provideDaoRepository(get()) }
+    factory { provideApiRepository(get()) }
+    factory { provideDaoRepository(get()) }
     single { provideDecoratorRepository(get(), get()) }
 }

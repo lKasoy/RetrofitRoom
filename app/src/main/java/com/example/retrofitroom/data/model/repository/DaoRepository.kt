@@ -2,7 +2,6 @@ package com.example.retrofitroom.data.model.repository
 
 import com.example.retrofitroom.data.model.dao.UserDao
 import com.example.retrofitroom.data.model.entity.UsersTable
-import javax.inject.Inject
 
 class DaoRepository (private val dao: UserDao) {
 
