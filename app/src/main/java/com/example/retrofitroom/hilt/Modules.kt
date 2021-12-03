@@ -1,6 +1,5 @@
 package com.example.retrofitroom.hilt
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.example.retrofitroom.constants.Constants
@@ -10,6 +9,7 @@ import com.example.retrofitroom.data.model.network.UserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -19,18 +19,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
-    @Provides
-    @Singleton
-    fun provideApplication(app: Application): Context = app
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
 class RoomModule {
     @Provides
     @Singleton
-    fun provideApplicationDatabase(context: Context): AppDatabase =
+    fun provideApplicationDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, "users_database")
             .build()
 

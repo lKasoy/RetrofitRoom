@@ -108,10 +108,10 @@ dependencies {
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:2.4.0-beta01")
 
-    // Koin
-    implementation "org.koin:koin-android:2.0.1"
-    implementation 'org.koin:koin-androidx-viewmodel:2.0.1'
-    implementation 'org.koin:koin-androidx-scope:2.0.1'
+//    // Koin
+//    implementation "org.koin:koin-android:2.0.1"
+//    implementation 'org.koin:koin-androidx-viewmodel:2.0.1'
+//    implementation 'org.koin:koin-androidx-scope:2.0.1'
 
     implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
@@ -129,6 +129,14 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:2.38.1")
     kapt("com.google.dagger:hilt-android-compiler:2.38.1")
+
+    implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
+
+    implementation("androidx.hilt:hilt-work:1.0.0")
+    // When using Kotlin.
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    // When using Java.
+    annotationProcessor("androidx.hilt:hilt-compiler:1.0.0")
 }
 
 kapt {

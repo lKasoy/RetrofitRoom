@@ -8,17 +8,14 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.example.retrofitroom.R
 import com.example.retrofitroom.constants.Constants.UUID
 import com.example.retrofitroom.data.model.entity.UsersTable
-import com.example.retrofitroom.data.model.repository.DecoratorRepository
 import com.example.retrofitroom.databinding.FragmentItemListBinding
 import com.example.retrofitroom.mvvm.viewModel.UsersViewModel
-import com.example.retrofitroom.mvvm.viewModel.UsersViewModelFactory
 import com.example.retrofitroom.services.UsersAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class UsersFragment : Fragment() {
@@ -39,10 +36,7 @@ class UsersFragment : Fragment() {
         }
     )
 
-    @Inject
-    lateinit var repository: DecoratorRepository
-
-    private lateinit var fragmentListViewModel: UsersViewModel
+    private val fragmentListViewModel: UsersViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,8 +55,6 @@ class UsersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.list.adapter = usersAdapter
-        val factory = UsersViewModelFactory(repository)
-        fragmentListViewModel = ViewModelProvider(this, factory).get(UsersViewModel::class.java)
         subscribeData()
     }
 

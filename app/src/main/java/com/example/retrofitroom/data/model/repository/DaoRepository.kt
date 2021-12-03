@@ -10,9 +10,9 @@ class DaoRepository @Inject constructor(private val dao: UserDao) {
 
     suspend fun add(users: List<UsersTable>) = dao.add(users)
 
-    suspend fun getUserById(id: String) = dao.getById(id)
+    suspend fun getUserById(id: String): UsersTable = dao.getById(id)
 
-    suspend fun getUsers() = dao.getAllUsers()
+    suspend fun getUsers(): List<UsersTable> = dao.getAllUsers()
 }
 
 

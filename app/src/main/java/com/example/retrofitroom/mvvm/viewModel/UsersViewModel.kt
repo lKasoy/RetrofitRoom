@@ -6,9 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.retrofitroom.data.model.entity.UsersTable
 import com.example.retrofitroom.data.model.repository.DecoratorRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UsersViewModel(private val decoratorRepository: DecoratorRepository) : ViewModel() {
+@HiltViewModel
+class UsersViewModel @Inject constructor(
+    private val decoratorRepository: DecoratorRepository) : ViewModel() {
 
     private val _data = MutableLiveData<List<UsersTable>>()
     val data: LiveData<List<UsersTable>> = _data
